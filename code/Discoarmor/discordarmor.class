@@ -1,0 +1,97 @@
+//## This is my disco armor class because so many people want it ##
+//----------------------------------------------------------------
+
+package me.mrjava.discoarmor.utills.qcraft.utill.da;
+
+import java.util.ArrayList;
+import java.util.Random;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Color;
+import org.bukkit.Material;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
+
+import pw.qcraft.qcraft.Arraylists.ArrayListManager;
+import pw.qcraft.qcraft.Core.Main;
+ 
+public class DiscoArmor implements Listener, CommandExecutor {
+//Array list manager
+	private ArrayListManager arm;
+	public DiscoArmor(ArrayListManager arm) {
+		this.arm = arm;
+	}
+  //
+	private Main main;
+	public DiscoArmor(final Main main) {
+		this.main = main;
+	Bukkit.getScheduler().scheduleSyncRepeatingTask(Bukkit.getPluginManager().getPlugin("Qcraft"), new Runnable() {
+		private Random r = new Random();
+	    @Override
+	    public void run() {
+	    	 Color c = Color.fromRGB(r.nextInt(255), r.nextInt(255), r.nextInt(255));
+	    	 Color c2 = Color.fromRGB(r.nextInt(255), r.nextInt(255), r.nextInt(255));
+	    	 Color c3 = Color.fromRGB(r.nextInt(255), r.nextInt(255), r.nextInt(255));
+	    	 Color c4 = Color.fromRGB(r.nextInt(255), r.nextInt(255), r.nextInt(255));
+             for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+            	 if (arm.da.contains(p.getPlayer().getName())) {
+                if (p.hasPermission("qcraft.staffmode.discoarmor")) {
+                	if (arm.da.contains(p.getPlayer().getName())) {
+            	 if (p.getInventory().getHelmet() != null && p.getInventory().getHelmet().getType() == Material.LEATHER_HELMET) {
+                             p.getInventory().setHelmet(getColorArmor(Material.LEATHER_HELMET, c));
+                     }
+                     if (p.getInventory().getChestplate() != null && p.getInventory().getChestplate().getType() == Material.LEATHER_CHESTPLATE) {
+                             p.getInventory().setChestplate(getColorArmor(Material.LEATHER_CHESTPLATE, c2));
+                     }
+                     if (p.getInventory().getLeggings() != null && p.getInventory().getLeggings().getType() == Material.LEATHER_LEGGINGS) {
+                             p.getInventory().setLeggings(getColorArmor(Material.LEATHER_LEGGINGS, c3));
+                     }           
+                     if (p.getInventory().getBoots() != null && p.getInventory().getBoots().getType() == Material.LEATHER_BOOTS) {
+                             p.getInventory().setBoots(getColorArmor(Material.LEATHER_BOOTS, c4));
+                     }
+                 }
+             }
+	    }
+             }
+	    }
+	}, 50, 1);
+	}
+	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+Player player = Bukkit.getPlayer(sender.getName());
+		if (commandLabel.equalsIgnoreCase("da")) {
+			if (sender.hasPermission("your.permissions.here")) {
+			if (arm.da.contains(sender.getName())) {
+				arm.da.remove(sender.getName());
+				sender.sendMessage(main.getConfig().getString("Prefix") + " " + ChatColor.RED + "Disco Armor / MLG Mode Is Now Disabled!");
+				return true;
+			} else {
+				arm.da.add(sender.getName());
+				sender.sendMessage(main.getConfig().getString("Prefix") + " " + ChatColor.GREEN + "Disco Armor / MLG Mode Is Now Enabled!");
+				player.sendTitle(ChatColor.GREEN + "M" + ChatColor.AQUA + "L" + ChatColor.BLUE + "G" +
+				ChatColor.RED + " TURNED ON!" , "");
+				
+			return true;
+			}
+			} else {
+				sender.sendMessage(main.getConfig().getString("Prefix") +  " " + main.getConfig().getString("noperm"));
+			}
+		}
+		return true;
+	}
+        private ItemStack getColorArmor(Material m, Color c) {
+                ItemStack i = new ItemStack(m, 1);
+                LeatherArmorMeta meta = (LeatherArmorMeta) i.getItemMeta();
+                meta.setColor(c);
+                i.setItemMeta(meta);
+                return i;
+        }
+        
+}
+
+
